@@ -47,31 +47,41 @@ def unlock():
 def startNBA():
     MonkeyRunner.sleep(pause*3)
     tap(400, 1300)
-    MonkeyRunner.sleep(pause*80)
+    MonkeyRunner.sleep(pause*90)
     print "Finished waiting for app"
     dragUp(1800, 200)
     dragUp(1800, 200)
-    MonkeyRunner.sleep(pause*30)
+    MonkeyRunner.sleep(pause*40)
     print "Finished waiting for app"
 
-def startQuickGame():
+def startQuickGame(RC=False):
     dragUp(1800, 200)
     dragUp(1800, 200)
-    tap(500, 1550)
+    if RC:
+        tap(500,780)
+    else:
+        tap(500, 1550)
     MonkeyRunner.sleep(pause*25)
 
-def playQuickGame():
-    tap(500, 1700)
+def playQuickGame(RC=False):
+    if RC:
+        print "In Rival Clash"
+        tap(500,1050)
+        MonkeyRunner.sleep(pause*15)
+        print "Starting RC Quick Game"
+        tap(500,1650)
+    else:
+        tap(500, 1700)
     MonkeyRunner.sleep(pause*25)
-    rapidTap(10, 500, 630)
+    rapidTap(25, 500, 630)
     print "C"
     tap(830, 1800)
     rapidTap(25, 500, 630)
-    print "PF"
-    tap(670, 1800)
-    rapidTap(25, 500, 630)
     print "SF"
     tap(510, 1800)
+    rapidTap(25, 500, 630)
+    print "PF"
+    tap(670, 1800)
     rapidTap(25, 500, 630)
     print "SG"
     tap(350, 1800)
@@ -85,7 +95,7 @@ def playQuickGame():
     chooseWinnings()
     MonkeyRunner.sleep(pause*6)
     tap(555, 1370)
-    print "Chhoosing second card"
+    print "Choosing second card"
     MonkeyRunner.sleep(pause*6)
     chooseWinnings()
     chooseWinnings()
@@ -119,15 +129,15 @@ def reset():
     MonkeyRunner.sleep(pause*25)
     tap(915, 515)
 
-
 print "Waiting for device!"
 # Connects to the current device, returning a MonkeyDevice object
 device = MonkeyRunner.waitForConnection()
 print "Connected to device!"
 MonkeyRunner.sleep(pause)
 #unlock()
-#startNBA()
-#startQuickGame()
-for x in xrange(0,20):
-    playQuickGame()
-reset()
+while True:
+    startQuickGame()
+    for x in xrange(0,8):
+        playQuickGame()
+    reset()
+    startNBA()
