@@ -45,7 +45,7 @@ def unlock():
     tap(x_right, y_check)
 
 def startNBA():
-    MonkeyRunner.sleep(pause*3)
+    MonkeyRunner.sleep(pause*5)
     tap(400, 1300)
     MonkeyRunner.sleep(pause*90)
     print "Finished waiting for app"
@@ -63,33 +63,65 @@ def startQuickGame(RC=False):
         tap(500, 1550)
     MonkeyRunner.sleep(pause*25)
 
+def playRound(QG=False):
+    print "C"
+    tap(830, 1800)
+    rapidTap(25, 500, 630)
+    print "PF"
+    tap(670, 1800)
+    rapidTap(25, 500, 630)
+    print "SF"
+    tap(510, 1800)
+    rapidTap(25, 500, 630)
+    print "PG"
+    tap(200, 1800)
+    rapidTap(25, 500, 630)
+    print "SG"
+    if QG:
+        tap(970, 1870)
+    tap(350, 1800)
+    rapidTap(30, 555, 1370)
+
+def startRTTC():
+    # Click on RTTC button
+    MonkeyRunner.sleep(pause*5)
+    tap(500, 1700)
+    MonkeyRunner.sleep(pause*25)
+
+def playRTTC(Greedy=True):
+    # Click Play
+    tap(500, 1350)
+    #Click +7
+    MonkeyRunner.sleep(pause*20)
+    tap(280, 900)
+    MonkeyRunner.sleep(pause*5)
+    rapidTap(25, 500, 630)
+    for x in xrange(0,4):
+        playRound()
+    print "Done playing"
+    if Greedy:
+        for x in xrange(0,8):
+            chooseWinnings()
+            chooseWinnings()
+            MonkeyRunner.sleep(pause*8)
+            tap(555, 1370)
+            MonkeyRunner.sleep(pause*8)
+        tap(500, 1870)
+        MonkeyRunner.sleep(pause*6)
+
+
 def playQuickGame(RC=False):
     if RC:
         print "In Rival Clash"
         tap(500,1050)
         MonkeyRunner.sleep(pause*15)
         print "Starting RC Quick Game"
-        tap(500,1650)
+        tap(500,1400)
     else:
         tap(500, 1700)
     MonkeyRunner.sleep(pause*25)
     rapidTap(25, 500, 630)
-    print "C"
-    tap(830, 1800)
-    rapidTap(25, 500, 630)
-    print "SF"
-    tap(510, 1800)
-    rapidTap(25, 500, 630)
-    print "PF"
-    tap(670, 1800)
-    rapidTap(25, 500, 630)
-    print "SG"
-    tap(350, 1800)
-    rapidTap(25, 500, 630)
-    print "PG"
-    tap(970, 1870)
-    tap(200, 1800)
-    rapidTap(30, 555, 1370)
+    playRound(QG=True)
     print "Done playing"
     chooseWinnings()
     chooseWinnings()
@@ -129,15 +161,54 @@ def reset():
     MonkeyRunner.sleep(pause*25)
     tap(915, 515)
 
+def playRTTCevery15():
+    MonkeyRunner.sleep(60*10)
+    for x in xrange(0,12):
+        print "Unlocking"
+        device.wake()
+        unlock()
+        startNBA()
+        startRTTC()
+        playRTTC()
+        reset()
+        MonkeyRunner.sleep(60*5)
+        print "5 minutes remaining"
+        MonkeyRunner.sleep(60*5)
+    while True:
+        print "Unlocking"
+        device.wake()
+        unlock()
+        startNBA()
+        startRTTC()
+        playRTTC(Greedy=False)
+        reset()
+        MonkeyRunner.sleep(60*5)
+        print "5 minutes remaining"
+        MonkeyRunner.sleep(60*5)
+
+def playnRTTCGames(n=5):
+    unlock()
+    startNBA()
+    startRTTC()
+    for x in xrange(0,n):
+        playRTTC()
+    reset()
+    playRTTCevery15()
+
+def playnQuickGames(n=7):
+    unlock()
+    for x in xrange(0,n):
+        startNBA()
+        startQuickGame(RC=True)
+        for y in xrange(0,8):
+            playQuickGame(RC=True)
+        print x
+        reset()
+
+
 print "Waiting for device!"
 # Connects to the current device, returning a MonkeyDevice object
 device = MonkeyRunner.waitForConnection()
 print "Connected to device!"
 MonkeyRunner.sleep(pause)
-#unlock()
-while True:
-    startQuickGame()
-    for x in xrange(0,8):
-        playQuickGame()
-    reset()
-    startNBA()
+playnQuickGames()
