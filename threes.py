@@ -12,19 +12,13 @@ def shoot():
 
 def shoot_rack():
     """Shoot 5 shots"""
-    shoot()
-    shoot()
-    shoot()
-    shoot()
-    shoot()
+    for _ in xrange(5):
+        shoot()
 
 def shoot_round():
     """Shoot 25 shots"""
-    shoot_rack()
-    shoot_rack()
-    shoot_rack()
-    shoot_rack()
-    shoot_rack()
+    for _ in xrange(5):
+        shoot_rack()
 
 print "Waiting for device!"
 # Connects to the current device, returning a MonkeyDevice object
